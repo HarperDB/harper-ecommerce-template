@@ -8,72 +8,69 @@ import { notFound } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ControlPanelContext } from "@/components/control-panel";
-import {
-  listProducts,
-  customizeProductDescription,
-  getUserTraits,
-} from '@/app/actions';
+// import { ControlPanelContext } from "@/components/control-panel";
+// import {
+//   listProducts,
+//   customizeProductDescription,
+//   getUserTraits,
+// } from '@/app/actions';
 
 export default function ProductPage({ id, product }) {
   if (!product) notFound();
-  const { aiPersonalizationEnabled } = useContext(ControlPanelContext);
+  // const { aiPersonalizationEnabled } = useContext(ControlPanelContext);
   const [productDescReady, setProductDescReady] = useState(false);
   const [recommendationsReady, setRecommendationsReady] = useState(false);
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [customDescription, setCustomDescription] = useState(null);
   const [traits, setTraits] = useState(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      // AI PRODUCT PERSONALIZATION
-      if (aiPersonalizationEnabled) {
-        const traits = await getUserTraits() || [];
-        setTraits(traits);
-
-        // If there are known user traits:
-        // fetch OpenAI recommended product description based on traits
-        if (Array.isArray(traits) && traits.length) {
-          try {
-            const customDescription = await customizeProductDescription(traits, product.description);
-            setCustomDescription(customDescription);
-            setProductDescReady(true);
-          } catch (err) {
-            console.error('Error fetching custom description data:', err);
-          }
-        } else {
-          setProductDescReady(true);
-        }        
-      }
-
-      // PRODUCT RECOMMENDATIONS
-      try {
-        const defaultRecommendation = await listProducts({
-          conditions: [
-            { attribute: 'category', value: product.category, comparator: 'equals' },
-            { attribute: 'id', value: id, comparator: 'not_equal' }
-          ],
-          limit: 3
-        });
-        setRelatedProducts(defaultRecommendation);
-        setRecommendationsReady(true);
-      } catch (err) {
-        console.error('Error fetching related product data:', err);
-      }
-    };
-
-    // Call fetchData when the component mounts
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     // AI PRODUCT PERSONALIZATION
+  //     if (aiPersonalizationEnabled) {
+  //       const traits = await getUserTraits() || [];
+  //       setTraits(traits);
+  //       // If there are known user traits:
+  //       // fetch OpenAI recommended product description based on traits
+  //       if (Array.isArray(traits) && traits.length) {
+  //         try {
+  //           const customDescription = await customizeProductDescription(traits, product.description);
+  //           setCustomDescription(customDescription);
+  //           setProductDescReady(true);
+  //         } catch (err) {
+  //           console.error('Error fetching custom description data:', err);
+  //         }
+  //       } else {
+  //         setProductDescReady(true);
+  //       }        
+  //     }
+  //     // PRODUCT RECOMMENDATIONS
+  //     try {
+  //       const defaultRecommendation = await listProducts({
+  //         conditions: [
+  //           { attribute: 'category', value: product.category, comparator: 'equals' },
+  //           { attribute: 'id', value: id, comparator: 'not_equal' }
+  //         ],
+  //         limit: 3
+  //       });
+  //       setRelatedProducts(defaultRecommendation);
+  //       setRecommendationsReady(true);
+  //     } catch (err) {
+  //       console.error('Error fetching related product data:', err);
+  //     }
+  //   };
+  //   // Call fetchData when the component mounts
+  //   fetchData();
+  // }, []);
 
   function renderProductDescription() {
-    if (aiPersonalizationEnabled && !customDescription && productDescReady === false) {
-      return 'Custom description loading...';
-    }
-    if (aiPersonalizationEnabled && Array.isArray(traits) && traits.length && customDescription) {
-      return customDescription;
-    }
-    // return default product description from harper
+  //   if (aiPersonalizationEnabled && !customDescription && productDescReady === false) {
+  //     return 'Custom description loading...';
+  //   }
+  //   if (aiPersonalizationEnabled && Array.isArray(traits) && traits.length && customDescription) {
+  //     return customDescription;
+  //   }
+  //   // return default product description from harper
     return product.description;
   }
 

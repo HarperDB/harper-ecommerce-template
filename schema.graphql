@@ -1,23 +1,2 @@
-type Specs {
-  Material: String
-  Dimensions: String
-  Weight: String
-  Capacity: String
-  Warranty: String
-}
-
-type Product @table @export {
-  id: ID @primaryKey
-  name: String @indexed
-  category: String @indexed
-  price: Float @indexed
-  image: String @indexed
-  description: String
-  features: [String]
-  specs: Specs
-}
-
-type Traits @table @export {
-  id: ID @primaryKey
-  traits: [String]
-}
+## Here we can define any tables in our database
+## We define a type as a table by name, then "export" to make the table data available in the REST and other external protocols.

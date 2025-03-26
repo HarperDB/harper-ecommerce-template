@@ -1,3 +1,6 @@
+# This file defines Harper-related configuration for this application.
+# Each defines a (sub) Harper component loaded & used for this application - like harperdb/nextjs
+# These components can provide specific functionality and define how different files in your app are loaded.
 graphqlSchema:
   files: '*.graphql'
 jsResource:

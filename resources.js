@@ -1,11 +1,2 @@
-import productdata from "./productdata.json" with { type: "json" };
-
-// product table seed data
-for (const product of productdata) {
-	tables.Product.put(product);
-}
-
-// trait table seed data
-// Typically this data would come from a tool like Segment, Optimizely, etc
-const USER_TRAITS = ['sporty', 'likes computers', 'lives near a ski resort'];
-tables.Traits.put({ id: "1", traits: USER_TRAITS});
+// Here we can define any JavaScript-based resources and extensions to tables
+// We can also seed product data to work with for the ecommerce app

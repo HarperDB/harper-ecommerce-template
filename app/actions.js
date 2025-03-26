@@ -1,43 +1,61 @@
 'use server';
-import { tables } from 'harperdb';
-const { Product } = tables;
+// import { tables } from 'harperdb';
+// const { Product } = tables;
 import { initAlgolia, initOpenai } from '../lib/utils';
 
-// Harper DB Server Actions
-export async function listProducts(conditions = {}) {
-	const products = [];
-  const results = Product.search(conditions);
-	for await (const product of results) {
-		products.push(product);
+let productdata = [
+	{
+    "id": "11",
+    "name": "Portable Laptop Stand",
+    "category": "Accessories",
+    "price": 39.99,
+    "image": "https://images.unsplash.com/photo-1623251606108-512c7c4a3507?auto=format&fit=crop&q=80&w=800",
+    "description": "Compact laptop stand with adjustable height",
+    "features": [
+      "Ergonomic design",
+      "Adjustable height",
+      "Lightweight and portable",
+      "Non-slip surface",
+      "Aluminum construction"
+    ],
+    "specs": {
+      "Material": "Aluminum",
+      "Weight": "1.2 lbs",
+      "Dimensions": "10\" x 9\" x 2\"",
+      "Warranty": "1 year"
+    }
 	}
-	return products;
+];
+export async function listProducts() {
+	return productdata;
 }
 
 export async function getProduct(id) {
-	return tables.Product.get(id);
+	return productdata.find(data => data.id === id);
 }
 
-export async function getUserTraits(id = "1") {
-	return tables.Traits.get(id).traits;
-}
+// Harper DB Server Actions
+// export async function listProducts(conditions = {}) {
+// 	const products = [];
+//   const results = Product.search(conditions);
+// 	for await (const product of results) {
+// 		products.push(product);
+// 	}
+// 	return products;
+// }
 
-export async function updateUserTraits(id = "1", traits) {
-	await tables.Traits.put({ id, traits });
-	return 'successfully updated Traits table';
-}
+// export async function getProduct(id) {
+// 	return tables.Product.get(id);
+// }
 
-// Algolia Search Server Actions
-const algoliaClient = initAlgolia();
-export async function searchProducts(searchTerm = ''){
-	if (algoliaClient) {
-		return await algoliaClient.searchSingleIndex({
-			indexName: 'productdata',
-			searchParams: { query: searchTerm },
-		});		
-	}
-	// TODO: return harperdb graphql query
-	return [];
-}
+// export async function getUserTraits(id = "1") {
+// 	return tables.Traits.get(id).traits;
+// }
+
+// export async function updateUserTraits(id = "1", traits) {
+// 	await tables.Traits.put({ id, traits });
+// 	return 'successfully updated Traits table';
+// }
 
 // OpenAI Server Actions
 const openaiClient = initOpenai();
@@ -57,40 +75,15 @@ export async function customizeProductDescription(userTraits = [], productDescri
 	return null;
 }
 
-export async function getAiRecommendations(userTraits = [], currentId) {
-	return await listProducts({
-		conditions: [{ attribute: 'id', value: currentId, comparator: 'not_equal' }]
-	})
-		.then(async data => {
-			const response = await openai.chat.completions.create({
-				model: "gpt-4o-mini",
-				messages: [
-					{
-						"role": "developer",
-						"content": [
-							{
-								"type": "text",
-								"text": `
-									You provide product recommendations that are related to the keywords: ${userTraits.join(', ')} 
-									from the following data: ${JSON.stringify(data)}.
-									Do not make up new products that do not exist in the data provided.
-									You respond with product recommendations in json format.
-								`
-							}
-						]
-					},
-					{
-						"role": "user",
-						"content": [
-							{
-								"type": "text",
-								"text": `Can you recommend a maximum of 3 products for me?`
-							}
-						]
-					}
-				],
-				response_format: { type: "json_object" }
-			});
-			return response.choices[0].message.content;
-		});
+// Algolia Search Server Actions
+const algoliaClient = initAlgolia();
+export async function searchProducts(searchTerm = ''){
+	if (algoliaClient) {
+		return await algoliaClient.searchSingleIndex({
+			indexName: 'productdata',
+			searchParams: { query: searchTerm },
+		});		
+	}
+	// TODO: return harperdb graphql query
+	return [];
 }
