@@ -4,7 +4,7 @@ This project is a basic ecommerce template that demonstrates a fullstack [Harper
 
 Harper provides the backend database, API, caching, and a server to run the Next.js frontend on. The same patterns in this code can be used to run any app that requires dynamic data and/or caching.
 
-Almost 2% of global ecommerce sales flow through Harper Systems, with an average p95 latency of 1.12ms across early hints, redirects, and product page lookups for real-world e-commerce applications. See the LCP stats for yourself by opening the Chrome devtools performance tab on our [live demo](https://test-kgdemo.harperdbcloud.com:9926/).
+Almost 2% of global ecommerce sales flow through Harper Systems, with an average p95 latency of 1.12ms across early hints, redirects, and product page lookups for real-world e-commerce applications.
 
 ## Getting Started
 - [Install Harper](https://docs.harperdb.io/docs/install-harperdb): `npm install -g harperdb`
